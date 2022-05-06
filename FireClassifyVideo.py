@@ -8,16 +8,16 @@ model = tf.keras.models.load_model('firemodel.h5')
 video = cv2.VideoCapture(0)
 while True:
         _, frame = video.read()
-#Convert the captured frame into RGB
+
         im = Image.fromarray(frame, 'RGB')
-#Resizing into 224x224 because we trained the model with this image size.
+
         im = im.resize((224,224))
         img_array = image.img_to_array(im)
         img_array = np.expand_dims(img_array, axis=0) / 255
         probabilities = model.predict(img_array)[0]
         #Calling the predict method on model to predict 'fire' on the image
         prediction = np.argmax(probabilities)
-        #if prediction is 0, which means there is fire in the frame.
+        #if fire is detected in the frame we turn it gray.
         if prediction == 0:
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
                 print(probabilities[prediction])
